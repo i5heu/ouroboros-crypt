@@ -13,7 +13,7 @@ type PublicKey struct {
 	publicKem  kem.PublicKey
 	publicSign sign.PublicKey
 	hash       *hash.Hash
-} 
+}
 
 func (p *PublicKey) Hash() (hash.Hash, error) {
 	if p.hash == nil {
