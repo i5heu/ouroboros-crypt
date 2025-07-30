@@ -205,5 +205,6 @@ func (p *PublicKey) Verify(data, signature []byte) bool {
 // for symmetric encryption, while the encapsulated key should be transmitted to the recipient.
 // Returns the shared secret, encapsulated key, and an error if the operation fails.
 func (p *PublicKey) Encapsulate() (sharedSecret, encapsulatedKey []byte, err error) {
-	return p.publicKem.Scheme().Encapsulate(p.publicKem)
+	ciphertext, sharedSecret, err := p.publicKem.Scheme().Encapsulate(p.publicKem)
+	return sharedSecret, ciphertext, err
 }

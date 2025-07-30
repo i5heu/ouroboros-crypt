@@ -66,7 +66,8 @@ func (ac *AsyncCrypt) GetPrivateKey() PrivateKey {
 // The recipient can use their private key to decapsulate and recover the same shared secret.
 // Returns the shared secret, encapsulated key, and an error if the operation fails.
 func (ac *AsyncCrypt) Encapsulate() (sharedSecret, encapsulatedKey []byte, err error) {
-	return ac.publicKey.publicKem.Scheme().Encapsulate(ac.publicKey.publicKem)
+	ciphertext, sharedSecret, err := ac.publicKey.publicKem.Scheme().Encapsulate(ac.publicKey.publicKem)
+	return sharedSecret, ciphertext, err
 }
 
 // Decapsulate recovers the shared secret from an encapsulated key using the ML-KEM private key.

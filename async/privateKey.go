@@ -155,3 +155,9 @@ func (p *PrivateKey) ToBase64Sign() (string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(bin), nil
 }
+
+// Decapsulate recovers the shared secret from an encapsulated key using the ML-KEM private key.
+// This is a public method for use by other packages.
+func (p *PrivateKey) Decapsulate(encapsulatedKey []byte) ([]byte, error) {
+	return p.privateKem.Scheme().Decapsulate(p.privateKem, encapsulatedKey)
+}

@@ -1,6 +1,6 @@
 module github.com/i5heu/ouroboros-crypt
 
-go 1.24.2
+go 1.24.5
 
 require github.com/cloudflare/circl v1.6.0
 
