@@ -10,7 +10,7 @@
 //	import "github.com/i5heu/ouroboros-crypt/async"
 //
 //	// Create a new cryptographic instance
-//	crypt, err := async.NewAsyncCrypt()
+//	crypt, err := keys.NewAsyncCrypt()
 //	if err != nil {
 //	    panic(err)
 //	}
@@ -27,15 +27,20 @@
 //	fmt.Printf("Signature valid: %v\n", valid)
 package crypt
 
+import (
+	"github.com/i5heu/ouroboros-crypt/encrypt"
+	"github.com/i5heu/ouroboros-crypt/hash"
+	"github.com/i5heu/ouroboros-crypt/keys"
+)
+
 // Crypt represents the main cryptographic operations struct.
-// This is a placeholder for future synchronous cryptographic operations.
-// For current functionality, use the 'async' package.
+// This struct now exposes synchronous encrypt and hash operations.
 type Crypt struct {
 }
 
 // NewCrypt creates a new Crypt instance.
 // This is currently a placeholder for future synchronous cryptographic operations.
-// For post-quantum cryptography, use async.NewAsyncCrypt() instead.
+// For post-quantum cryptography, use keys.NewAsyncCrypt() instead.
 func NewCrypt() *Crypt {
 	return &Crypt{}
 }
@@ -44,4 +49,19 @@ func NewCrypt() *Crypt {
 // This can be used for compatibility checks and debugging.
 func (c *Crypt) Version() string {
 	return "1.0.0"
+}
+
+// Encrypt encrypts data using the recipient's ML-KEM1024 public key.
+func (c *Crypt) Encrypt(data []byte, pub *keys.PublicKey) (*encrypt.EncryptResult, error) {
+	return encrypt.Encrypt(data, pub)
+}
+
+// Decrypt decrypts data using the recipient's ML-KEM1024 private key.
+func (c *Crypt) Decrypt(enc *encrypt.EncryptResult, priv *keys.PrivateKey) ([]byte, error) {
+	return encrypt.Decrypt(enc, priv)
+}
+
+// HashBytes computes the SHA-512 hash of the given byte slice.
+func (c *Crypt) HashBytes(data []byte) hash.Hash {
+	return hash.HashBytes(data)
 }

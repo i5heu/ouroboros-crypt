@@ -1,7 +1,7 @@
-// Package async provides asynchronous cryptographic operations using post-quantum algorithms.
+// package keys provides asynchronous cryptographic operations using post-quantum algorithms.
 // It implements ML-KEM (Module-Lattice-based Key Encapsulation Mechanism) and ML-DSA (Module-Lattice-based Digital Signature Algorithm)
 // for quantum-resistant cryptography.
-package async
+package keys
 
 import (
 	"fmt"

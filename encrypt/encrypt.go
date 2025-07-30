@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/i5heu/ouroboros-crypt/async"
+	"github.com/i5heu/ouroboros-crypt/keys"
 )
 
 // EncryptResult contains the encrypted data and the encapsulated secret.
@@ -22,7 +22,7 @@ type EncryptResult struct {
 
 // Encrypt encrypts arbitrary binary data using the recipient's ML-KEM1024 public key.
 // It returns the encrypted data, encapsulated secret, and nonce.
-func Encrypt(data []byte, pub *async.PublicKey) (*EncryptResult, error) {
+func Encrypt(data []byte, pub *keys.PublicKey) (*EncryptResult, error) {
 	if pub == nil {
 		return nil, errors.New("public key cannot be nil")
 	}
@@ -64,7 +64,7 @@ func Encrypt(data []byte, pub *async.PublicKey) (*EncryptResult, error) {
 
 // Decrypt decrypts the encrypted data using the recipient's ML-KEM1024 private key.
 // It takes the ciphertext, encapsulated secret, and nonce, and returns the original data.
-func Decrypt(enc *EncryptResult, priv *async.PrivateKey) ([]byte, error) {
+func Decrypt(enc *EncryptResult, priv *keys.PrivateKey) ([]byte, error) {
 	if enc == nil {
 		return nil, errors.New("encrypt result cannot be nil")
 	}

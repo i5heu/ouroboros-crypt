@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/i5heu/ouroboros-crypt/async"
 	"github.com/i5heu/ouroboros-crypt/encrypt"
+	"github.com/i5heu/ouroboros-crypt/keys"
 )
 
 func main() {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		log.Fatal(err)
 	}

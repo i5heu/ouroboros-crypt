@@ -5,13 +5,13 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/i5heu/ouroboros-crypt/async"
+	"github.com/i5heu/ouroboros-crypt/keys"
 )
 
 // TestBasicEncryptDecrypt tests the basic encrypt-decrypt cycle
 func TestBasicEncryptDecrypt(t *testing.T) {
 	// Generate key pair
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -54,7 +54,7 @@ func TestBasicEncryptDecrypt(t *testing.T) {
 
 // TestEmptyData tests encryption and decryption of empty data
 func TestEmptyData(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -80,7 +80,7 @@ func TestEmptyData(t *testing.T) {
 
 // TestLargeData tests encryption and decryption of large data
 func TestLargeData(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -111,7 +111,7 @@ func TestLargeData(t *testing.T) {
 
 // TestMultipleEncryptions tests that multiple encryptions of the same data produce different results
 func TestMultipleEncryptions(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -170,12 +170,12 @@ func TestMultipleEncryptions(t *testing.T) {
 // TestWrongPrivateKey tests that decryption fails with the wrong private key
 func TestWrongPrivateKey(t *testing.T) {
 	// Generate two different key pairs
-	ac1, err := async.NewAsyncCrypt()
+	ac1, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate first key pair: %v", err)
 	}
 
-	ac2, err := async.NewAsyncCrypt()
+	ac2, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate second key pair: %v", err)
 	}
@@ -199,7 +199,7 @@ func TestWrongPrivateKey(t *testing.T) {
 
 // TestCorruptedCiphertext tests behavior with corrupted ciphertext
 func TestCorruptedCiphertext(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -227,7 +227,7 @@ func TestCorruptedCiphertext(t *testing.T) {
 
 // TestCorruptedNonce tests behavior with corrupted nonce
 func TestCorruptedNonce(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -255,7 +255,7 @@ func TestCorruptedNonce(t *testing.T) {
 
 // TestCorruptedEncapsulatedKey tests behavior with corrupted encapsulated key
 func TestCorruptedEncapsulatedKey(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -283,7 +283,7 @@ func TestCorruptedEncapsulatedKey(t *testing.T) {
 
 // TestInvalidNonceSize tests behavior with invalid nonce size
 func TestInvalidNonceSize(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -313,7 +313,7 @@ func TestInvalidNonceSize(t *testing.T) {
 
 // TestNilInputs tests behavior with nil inputs
 func TestNilInputs(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -345,7 +345,7 @@ func TestNilInputs(t *testing.T) {
 
 // TestConcurrentEncryption tests that encryption is safe for concurrent use
 func TestConcurrentEncryption(t *testing.T) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		t.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -394,7 +394,7 @@ func TestConcurrentEncryption(t *testing.T) {
 
 // BenchmarkEncrypt benchmarks the encryption operation
 func BenchmarkEncrypt(b *testing.B) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		b.Fatalf("Failed to generate key pair: %v", err)
 	}
@@ -418,7 +418,7 @@ func BenchmarkEncrypt(b *testing.B) {
 
 // BenchmarkDecrypt benchmarks the decryption operation
 func BenchmarkDecrypt(b *testing.B) {
-	ac, err := async.NewAsyncCrypt()
+	ac, err := keys.NewAsyncCrypt()
 	if err != nil {
 		b.Fatalf("Failed to generate key pair: %v", err)
 	}
