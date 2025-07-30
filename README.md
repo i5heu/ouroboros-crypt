@@ -17,6 +17,7 @@ go get github.com/i5heu/ouroboros-crypt
 
 ## Usage
 
+
 ### Key Generation and Saving
 
 ```go
@@ -41,33 +42,61 @@ if err != nil {
 }
 ```
 
-### Encrypt and Decrypt
+### Usage with Crypt
+
+You can use the `Crypt` struct for direct encryption, decryption, and hashing. It wraps key management and provides a simple API.
+
+#### 1. Initialize Crypt and Encrypt/Decrypt
 
 ```go
 import (
-    "github.com/i5heu/ouroboros-crypt/encrypt"
-    "github.com/i5heu/ouroboros-crypt/keys"
+    "github.com/i5heu/ouroboros-crypt"
 )
 
-// Generate/load keys as above
-pub := acLoaded.GetPublicKey()
-priv := acLoaded.GetPrivateKey()
+// Create a new Crypt instance (generates new keys)
+crypt := crypt.New()
 
-enc := encrypt.NewEncryptor(&pub, &priv)
-data := []byte("hello world")
-
-// Encrypt
-result, err := enc.Encrypt(data)
+// Encrypt some data using the internal public key
+data := []byte("hello Ouroboros!")
+encResult, err := crypt.Encrypt(data, crypt.Keys.GetPublicKey())
 if err != nil {
     panic(err)
 }
 
-// Decrypt
-decrypted, err := enc.Decrypt(result)
+// Decrypt using the internal private key
+decrypted, err := crypt.Decrypt(encResult, crypt.Keys.GetPrivateKey())
 if err != nil {
     panic(err)
 }
+fmt.Printf("Decrypted: %s\n", decrypted)
 ```
+
+#### 2. Load Crypt from file and use for encryption/decryption
+
+```go
+import (
+    "github.com/i5heu/ouroboros-crypt"
+)
+
+crypt, err := crypt.NewFromFile("mykeys.key")
+if err != nil {
+    panic(err)
+}
+
+data := []byte("secure message")
+encResult, err := crypt.Encrypt(data, crypt.Keys.GetPublicKey())
+if err != nil {
+    panic(err)
+}
+
+decrypted, err := crypt.Decrypt(encResult, crypt.Keys.GetPrivateKey())
+if err != nil {
+    panic(err)
+}
+fmt.Printf("Decrypted: %s\n", decrypted)
+```
+
+> **Note:** You can use an initialized `Crypt` directly for encryption and decryption, without manually creating encryptors or extracting keys. This simplifies usage for most applications.
 
 ### Hashing
 
