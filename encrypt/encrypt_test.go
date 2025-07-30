@@ -8,6 +8,108 @@ import (
 	"github.com/i5heu/ouroboros-crypt/keys"
 )
 
+func generateKeyPair(t *testing.T) (*keys.PublicKey, *keys.PrivateKey) {
+	ac, err := keys.NewAsyncCrypt()
+	if err != nil {
+		t.Fatalf("failed to generate key pair: %v", err)
+	}
+	pub := ac.GetPublicKey()
+	priv := ac.GetPrivateKey()
+	return &pub, &priv
+}
+
+func TestEncryptDecrypt_Success(t *testing.T) {
+	pub, priv := generateKeyPair(t)
+	enc := NewEncryptor(pub, priv)
+	data := []byte("hello world")
+
+	result, err := enc.Encrypt(data)
+	if err != nil {
+		t.Fatalf("Encrypt failed: %v", err)
+	}
+
+	decrypted, err := enc.Decrypt(result)
+	if err != nil {
+		t.Fatalf("Decrypt failed: %v", err)
+	}
+
+	if !bytes.Equal(data, decrypted) {
+		t.Errorf("decrypted data does not match original")
+	}
+}
+
+func TestEncryptor_Encrypt_NoPublicKey(t *testing.T) {
+	enc := NewEncryptor(nil, nil)
+	_, err := enc.Encrypt([]byte("test"))
+	if err == nil {
+		t.Error("expected error when public key is nil")
+	}
+}
+
+func TestEncryptor_Decrypt_NoPrivateKey(t *testing.T) {
+	pub, _ := generateKeyPair(t)
+	enc := NewEncryptor(pub, nil)
+	result, _ := Encrypt([]byte("test"), pub)
+	_, err := enc.Decrypt(result)
+	if err == nil {
+		t.Error("expected error when private key is nil")
+	}
+}
+
+func TestEncrypt_NilPublicKey(t *testing.T) {
+	_, err := Encrypt([]byte("test"), nil)
+	if err == nil {
+		t.Error("expected error when public key is nil")
+	}
+}
+
+func TestDecrypt_NilEncryptResult(t *testing.T) {
+	_, priv := generateKeyPair(t)
+	_, err := Decrypt(nil, priv)
+	if err == nil {
+		t.Error("expected error when encrypt result is nil")
+	}
+}
+
+func TestDecrypt_NilPrivateKey(t *testing.T) {
+	pub, _ := generateKeyPair(t)
+	result, _ := Encrypt([]byte("test"), pub)
+	_, err := Decrypt(result, nil)
+	if err == nil {
+		t.Error("expected error when private key is nil")
+	}
+}
+
+func TestDecrypt_InvalidEncapsulatedKey(t *testing.T) {
+	pub, priv := generateKeyPair(t)
+	result, _ := Encrypt([]byte("test"), pub)
+	result.EncapsulatedKey = []byte("invalid")
+	_, err := Decrypt(result, priv)
+	if err == nil {
+		t.Error("expected error for invalid encapsulated key")
+	}
+}
+
+func TestDecrypt_InvalidNonceSize(t *testing.T) {
+	pub, priv := generateKeyPair(t)
+	result, _ := Encrypt([]byte("test"), pub)
+	result.Nonce = []byte("short")
+	_, err := Decrypt(result, priv)
+	if err == nil {
+		t.Error("expected error for invalid nonce size")
+	}
+}
+
+func TestDecrypt_InvalidCiphertext(t *testing.T) {
+	pub, priv := generateKeyPair(t)
+	result, _ := Encrypt([]byte("test"), pub)
+	result.Ciphertext = []byte("invalid")
+	_, err := Decrypt(result, priv)
+	if err == nil {
+		t.Error("expected error for invalid ciphertext")
+	}
+}
+
 // TestBasicEncryptDecrypt tests the basic encrypt-decrypt cycle
 func TestBasicEncryptDecrypt(t *testing.T) {
 	// Generate key pair
