@@ -100,13 +100,13 @@ func (c *Crypt) Version() string {
 }
 
 // Encrypt encrypts data using the recipient's ML-KEM1024 public key.
-func (c *Crypt) Encrypt(data []byte, pub *keys.PublicKey) (*encrypt.EncryptResult, error) {
-	return encrypt.Encrypt(data, pub)
+func (c *Crypt) Encrypt(data []byte) (*encrypt.EncryptResult, error) {
+	return encrypt.Encrypt(data, c.Encryptor.PublicKey)
 }
 
 // Decrypt decrypts data using the recipient's ML-KEM1024 private key.
-func (c *Crypt) Decrypt(enc *encrypt.EncryptResult, priv *keys.PrivateKey) ([]byte, error) {
-	return encrypt.Decrypt(enc, priv)
+func (c *Crypt) Decrypt(enc *encrypt.EncryptResult) ([]byte, error) {
+	return encrypt.Decrypt(enc, c.Encryptor.PrivateKey)
 }
 
 // HashBytes computes the SHA-512 hash of the given byte slice.

@@ -56,13 +56,11 @@ func TestVersion(t *testing.T) {
 func TestEncryptDecrypt(t *testing.T) {
 	c := New()
 	data := []byte("test data")
-	pub := c.Keys.GetPublicKey()
-	priv := c.Keys.GetPrivateKey()
-	enc, err := c.Encrypt(data, &pub)
+	enc, err := c.Encrypt(data)
 	if err != nil {
 		t.Fatalf("Encrypt failed: %v", err)
 	}
-	dec, err := c.Decrypt(enc, &priv)
+	dec, err := c.Decrypt(enc)
 	if err != nil {
 		t.Fatalf("Decrypt failed: %v", err)
 	}
