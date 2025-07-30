@@ -9,13 +9,20 @@ import (
 	"github.com/cloudflare/circl/sign"
 )
 
-// OuroContainer is our custom file structure that holds the version and the two private keys.
+// OuroContainer represents the file structure for persisting AsyncCrypt keys to disk.
+// It contains versioning information and base64-encoded private keys for both
+// ML-KEM1024 (key encapsulation) and ML-DSA87 (digital signature) algorithms.
+// This structure ensures forward compatibility and secure key storage.
 type OuroContainer struct {
-	Version       string `json:"version"`
+	Version       string `json:"version"`        // Version of the container format
 	MLKEM1024Priv string `json:"mlkem1024_priv"` // Base64-encoded MLKEM1024 private key
 	MLDSA87Priv   string `json:"mldsa87_priv"`   // Base64-encoded ML-DSA87 private key
 }
 
+// SaveToFile persists the AsyncCrypt private keys to a JSON file.
+// The keys are base64-encoded and stored in a versioned container format.
+// The file is created with restricted permissions (0600) to protect the private keys.
+// Returns an error if key marshaling, JSON encoding, or file writing fails.
 func (ac *AsyncCrypt) SaveToFile(filename string) error {
 	// Create the OuroContainer with the version and keys
 
@@ -49,7 +56,12 @@ func (ac *AsyncCrypt) SaveToFile(filename string) error {
 	return nil
 }
 
-func NewAsyncCryptFromFile(filename string) (*AsyncCrypt, error) {
+// NewCryptFromFile creates a new AsyncCrypt instance by loading private keys from a JSON file.
+// It reads the file, decodes the JSON container, and reconstructs the private keys
+// from their base64-encoded representations. The corresponding public keys are derived
+// from the private keys. Returns an error if file reading, JSON decoding, base64 decoding,
+// or key reconstruction fails.
+func NewCryptFromFile(filename string) (*AsyncCrypt, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %v", err)

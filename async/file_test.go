@@ -15,7 +15,7 @@ func TestSaveToFile(t *testing.T) {
 		t.Fatalf("Failed to save AsyncCrypt to file: %v", err)
 	}
 
-	acLoaded, err := NewAsyncCryptFromFile(dir + "/test_asynccrypt")
+	acLoaded, err := NewCryptFromFile(dir + "/test_asynccrypt")
 	if err != nil {
 		t.Fatalf("Failed to load AsyncCrypt from file: %v", err)
 	}
