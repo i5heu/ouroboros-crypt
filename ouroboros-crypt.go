@@ -28,6 +28,8 @@
 package crypt
 
 import (
+	"fmt"
+
 	"github.com/i5heu/ouroboros-crypt/encrypt"
 	"github.com/i5heu/ouroboros-crypt/hash"
 	"github.com/i5heu/ouroboros-crypt/keys"
@@ -36,13 +38,59 @@ import (
 // Crypt represents the main cryptographic operations struct.
 // This struct now exposes synchronous encrypt and hash operations.
 type Crypt struct {
+	Keys      *keys.AsyncCrypt
+	Encryptor *encrypt.Encryptor
 }
 
-// NewCrypt creates a new Crypt instance.
-// This is currently a placeholder for future synchronous cryptographic operations.
-// For post-quantum cryptography, use keys.NewAsyncCrypt() instead.
-func NewCrypt() *Crypt {
-	return &Crypt{}
+// New initializes a new Crypt instance by generating a new asynchronous key pair.
+// It panics if key generation fails or if the public/private keys are invalid.
+// The returned Crypt contains the generated keys and an associated Encryptor.
+func New() *Crypt {
+	k, err := keys.NewAsyncCrypt()
+	if err != nil {
+		panic(err)
+	}
+
+	pub := k.GetPublicKey()
+	priv := k.GetPrivateKey()
+	var zeroPub keys.PublicKey
+	var zeroPriv keys.PrivateKey
+	if pub == zeroPub || priv == zeroPriv {
+		panic("Failed to retrieve public or private key")
+	}
+
+	e := encrypt.NewEncryptor(&pub, &priv)
+
+	return &Crypt{
+		Keys:      k,
+		Encryptor: e,
+	}
+}
+
+// NewFromFile creates a new Crypt instance by loading configuration or data from the specified file path.
+// The 'filepath' parameter should be the path to the file to load.
+// Returns a pointer to the Crypt instance and an error if the operation fails.
+func NewFromFile(filepath string) (*Crypt, error) {
+	// Load the AsyncCrypt instance from the specified file
+	ac, err := keys.NewCryptFromFile(filepath)
+	if err != nil {
+		return nil, err
+	}
+
+	pub := ac.GetPublicKey()
+	priv := ac.GetPrivateKey()
+	var zeroPub keys.PublicKey
+	var zeroPriv keys.PrivateKey
+	if pub == zeroPub || priv == zeroPriv {
+		return nil, fmt.Errorf("failed to retrieve public or private key from file: %s", filepath)
+	}
+
+	e := encrypt.NewEncryptor(&pub, &priv)
+
+	return &Crypt{
+		Keys:      ac,
+		Encryptor: e,
+	}, nil
 }
 
 // Version returns the version of the Ouroboros cryptographic library.

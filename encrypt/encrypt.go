@@ -13,6 +13,33 @@ import (
 	"github.com/i5heu/ouroboros-crypt/keys"
 )
 
+// Encryptor holds public and private keys for convenient encryption/decryption.
+type Encryptor struct {
+	PublicKey  *keys.PublicKey
+	PrivateKey *keys.PrivateKey
+}
+
+// NewEncryptor initializes an Encryptor with the given public and/or private key.
+func NewEncryptor(pub *keys.PublicKey, priv *keys.PrivateKey) *Encryptor {
+	return &Encryptor{PublicKey: pub, PrivateKey: priv}
+}
+
+// Encrypt encrypts data using the Encryptor's public key.
+func (e *Encryptor) Encrypt(data []byte) (*EncryptResult, error) {
+	if e.PublicKey == nil {
+		return nil, errors.New("Encryptor: public key is nil")
+	}
+	return Encrypt(data, e.PublicKey)
+}
+
+// Decrypt decrypts data using the Encryptor's private key.
+func (e *Encryptor) Decrypt(enc *EncryptResult) ([]byte, error) {
+	if e.PrivateKey == nil {
+		return nil, errors.New("Encryptor: private key is nil")
+	}
+	return Decrypt(enc, e.PrivateKey)
+}
+
 // EncryptResult contains the encrypted data and the encapsulated secret.
 type EncryptResult struct {
 	Ciphertext      []byte // Encrypted data
