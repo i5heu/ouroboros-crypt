@@ -64,6 +64,8 @@ func Encrypt(data []byte, pub *keys.PublicKey) (*EncryptResult, error) {
 	if len(sharedSecret) < 32 {
 		return nil, errors.New("shared secret too short for AES-256")
 	}
+
+	// TODO maybe use HKDF to derive the key and also AES-SIV might be better
 	key := sharedSecret[:32]
 
 	block, err := aes.NewCipher(key)
