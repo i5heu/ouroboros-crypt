@@ -70,17 +70,17 @@ func Encrypt(data []byte, pub *keys.PublicKey) (*EncryptResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	gcm, err := cipher.NewGCM(block)
+	aead, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
 	}
 
-	nonce := make([]byte, gcm.NonceSize())
+	nonce := make([]byte, aead.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, err
 	}
 
-	ciphertext := gcm.Seal(nil, nonce, data, nil)
+	ciphertext := aead.Seal(nil, nonce, data, nil)
 
 	return &EncryptResult{
 		Ciphertext:      ciphertext,
@@ -113,15 +113,15 @@ func Decrypt(enc *EncryptResult, priv *keys.PrivateKey) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	gcm, err := cipher.NewGCM(block)
+	aead, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
 	}
-	if len(enc.Nonce) != gcm.NonceSize() {
+	if len(enc.Nonce) != aead.NonceSize() {
 		return nil, errors.New("invalid nonce size")
 	}
 
-	plaintext, err := gcm.Open(nil, enc.Nonce, enc.Ciphertext, nil)
+	plaintext, err := aead.Open(nil, enc.Nonce, enc.Ciphertext, nil)
 	if err != nil {
 		return nil, fmt.Errorf("AES-GCM decryption failed: %w", err)
 	}
