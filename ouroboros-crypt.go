@@ -30,9 +30,9 @@ package crypt
 import (
 	"fmt"
 
-	"github.com/i5heu/ouroboros-crypt/encrypt"
-	"github.com/i5heu/ouroboros-crypt/hash"
-	"github.com/i5heu/ouroboros-crypt/keys"
+	"github.com/i5heu/ouroboros-crypt/pkg/encrypt"
+	"github.com/i5heu/ouroboros-crypt/pkg/hash"
+	"github.com/i5heu/ouroboros-crypt/pkg/keys"
 )
 
 // Crypt represents the main cryptographic operations struct.

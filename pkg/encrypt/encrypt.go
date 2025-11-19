@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/i5heu/ouroboros-crypt/keys"
+	"github.com/i5heu/ouroboros-crypt/pkg/keys"
 )
 
 // Encryptor holds public and private keys for convenient encryption/decryption.

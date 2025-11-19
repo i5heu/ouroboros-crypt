@@ -21,7 +21,7 @@ go get github.com/i5heu/ouroboros-crypt
 ### Key Generation and Saving
 
 ```go
-import "github.com/i5heu/ouroboros-crypt/keys"
+import "github.com/i5heu/ouroboros-crypt/pkg/keys"
 
 // Generate a new key pair
 ac, err := keys.NewAsyncCrypt()
@@ -101,7 +101,7 @@ fmt.Printf("Decrypted: %s\n", decrypted)
 ### Hashing
 
 ```go
-import "github.com/i5heu/ouroboros-crypt/hash"
+import "github.com/i5heu/ouroboros-crypt/pkg/hash"
 
 // Hash a string
 h := hash.HashString("abc")

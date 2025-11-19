@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/i5heu/ouroboros-crypt/encrypt"
-	"github.com/i5heu/ouroboros-crypt/keys"
+	"github.com/i5heu/ouroboros-crypt/pkg/encrypt"
+	"github.com/i5heu/ouroboros-crypt/pkg/keys"
 )
 
 func main() {

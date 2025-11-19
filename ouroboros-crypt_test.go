@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/i5heu/ouroboros-crypt/keys"
+	"github.com/i5heu/ouroboros-crypt/pkg/keys"
 )
 
 func TestNew(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 
-	"github.com/i5heu/ouroboros-crypt/hash"
+	"github.com/i5heu/ouroboros-crypt/pkg/hash"
 
 	"github.com/cloudflare/circl/kem"
 	"github.com/cloudflare/circl/kem/mlkem/mlkem1024"

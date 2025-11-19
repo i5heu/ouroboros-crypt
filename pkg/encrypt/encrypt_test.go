@@ -5,7 +5,7 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/i5heu/ouroboros-crypt/keys"
+	"github.com/i5heu/ouroboros-crypt/pkg/keys"
 )
 
 func generateKeyPair(t *testing.T) (*keys.PublicKey, *keys.PrivateKey) {

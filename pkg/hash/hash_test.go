@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/i5heu/ouroboros-crypt/hash" // Replace with the actual module path.
+	"github.com/i5heu/ouroboros-crypt/pkg/hash" // Replace with the actual module path.
 )
 
 func TestHashString(t *testing.T) {
