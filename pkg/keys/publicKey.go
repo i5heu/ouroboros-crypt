@@ -1,6 +1,7 @@
 package keys
 
 import (
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
 
@@ -20,6 +21,26 @@ type PublicKey struct {
 	publicKem  kem.PublicKey  // ML-KEM1024 public key for key encapsulation
 	publicSign sign.PublicKey // ML-DSA87 public key for digital signature verification
 	hash       *hash.Hash     // Cached hash of the public key for efficient comparison
+}
+
+// NodeID represents a 32-byte SHA-256 identifier derived from the PublicKey.
+// It is used as a compact, unique identifier for nodes derived from their public keys.
+type NodeID [32]byte
+
+// String returns the hexadecimal string representation of the NodeID.
+func (n NodeID) String() string {
+	return hex.EncodeToString(n[:])
+}
+
+// Bytes returns the raw byte representation of the NodeID.
+func (n NodeID) Bytes() []byte {
+	return n[:]
+}
+
+// IsZero returns true if the NodeID is all zeros (uninitialized).
+func (n NodeID) IsZero() bool {
+	var z NodeID
+	return n == z
 }
 
 // NewPublicKeyFromBinary creates a new PublicKey instance from binary-encoded key data.
@@ -93,6 +114,27 @@ func (p *PublicKey) Hash() (hash.Hash, error) {
 	}
 	tmp := *p.hash
 	return tmp, nil
+}
+
+// NodeID computes the SHA-256 hash of the public key material (KEM || Sign) and returns it.
+// The NodeID is computed over the concatenation of KEM and Sign public key binary encodings.
+func (p *PublicKey) NodeID() (NodeID, error) {
+	kemBin, err := p.publicKem.MarshalBinary()
+	if err != nil {
+		return NodeID{}, err
+	}
+	signBin, err := p.publicSign.MarshalBinary()
+	if err != nil {
+		return NodeID{}, err
+	}
+	// Concatenate the two binary representations and hash with SHA-256
+	combined := make([]byte, 0, len(kemBin)+len(signBin))
+	combined = append(combined, kemBin...)
+	combined = append(combined, signBin...)
+	h := sha256.Sum256(combined)
+	var nid NodeID
+	copy(nid[:], h[:])
+	return nid, nil
 }
 
 // MarshalBinaryKEM serializes the PublicKey into a binary format suitable for use with

@@ -89,3 +89,24 @@ func TestPublicKey_Equal(t *testing.T) {
 		t.Error("Different PublicKeys are considered equal")
 	}
 }
+
+func TestPublicKey_NodeID(t *testing.T) {
+	pk := getTestPublicKey(t)
+	nid1, err := pk.NodeID()
+	if err != nil {
+		t.Fatalf("NodeID() error: %v", err)
+	}
+	nid2, err := pk.NodeID()
+	if err != nil {
+		t.Fatalf("NodeID() error on second call: %v", err)
+	}
+	if nid1 != nid2 {
+		t.Error("NodeID() returned different values on subsequent calls")
+	}
+	if nid1.IsZero() {
+		t.Error("NodeID() returned zero value")
+	}
+	if len(nid1.Bytes()) != 32 {
+		t.Errorf("NodeID length = %d, want 32", len(nid1.Bytes()))
+	}
+}

@@ -40,6 +40,7 @@ import (
 type Crypt struct {
 	Keys      *keys.AsyncCrypt
 	Encryptor *encrypt.Encryptor
+	NodeID    keys.NodeID
 }
 
 // New initializes a new Crypt instance by generating a new asynchronous key pair.
@@ -61,9 +62,15 @@ func New() *Crypt {
 
 	e := encrypt.NewEncryptor(&pub, &priv)
 
+	nid, err := pub.NodeID()
+	if err != nil {
+		panic(err)
+	}
+
 	return &Crypt{
 		Keys:      k,
 		Encryptor: e,
+		NodeID:    nid,
 	}
 }
 
@@ -87,9 +94,15 @@ func NewFromFile(filepath string) (*Crypt, error) {
 
 	e := encrypt.NewEncryptor(&pub, &priv)
 
+	nid, err := pub.NodeID()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Crypt{
 		Keys:      ac,
 		Encryptor: e,
+		NodeID:    nid,
 	}, nil
 }
 

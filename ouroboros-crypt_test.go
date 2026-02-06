@@ -79,3 +79,18 @@ func TestHashBytes(t *testing.T) {
 		t.Errorf("Hash length = %d, want 64", len(hashBytes))
 	}
 }
+
+func TestCrypt_NodeID(t *testing.T) {
+	c := New()
+	if c.NodeID.IsZero() {
+		t.Error("Crypt.NodeID is zero")
+	}
+	pub := c.Keys.GetPublicKey()
+	expected, err := pub.NodeID()
+	if err != nil {
+		t.Fatalf("public key NodeID() error: %v", err)
+	}
+	if c.NodeID != expected {
+		t.Error("Crypt.NodeID does not match public key NodeID")
+	}
+}
